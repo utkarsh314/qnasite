@@ -1,0 +1,14 @@
+{% extends "users/base.html" %}
+{% block content %}
+{% for question in questions %}
+  <article class="media content-section">
+    <div class="media-body">
+      <div class="article-metadata">
+        <a class="mr-2" href="#">{{ question.Asked_By }}</a>
+        <small class="text-muted">{{ question.date_posted|date:"F d, Y" }}</small>
+      </div>
+      <h2><a class="article-title" href="{% url 'question' question.id %}">{{ question.Title }}</a></h2>
+    </div>
+  </article>
+{% endfor %}
+{% endblock content %}

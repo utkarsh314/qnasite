@@ -1,0 +1,56 @@
+{% extends "users/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<article class="media content-section">
+  <img class="rounded-circle article-img" src="{{ question.Asked_By.profile.image.url }}">
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="#">{{ question.Asked_By }}</a>
+      <small class="text-muted">{{ question.date_posted|date:"F d, Y" }}</small>
+      {% if question.Asked_By == user %}
+      <div>
+        <a class="btn btn-secondary btn-sm mt-1 mb-1" href="{% url 'edit_question' question.id %}">Edit</a>
+        <a class="btn btn-danger btn-sm mt-1 mb-1" href="{% url 'delete_question' question.id %}">Delete</a>
+      </div>
+      {% endif %}
+    </div>
+    <h2 class="article-title">{{ question.Title }}</h2>
+    <p class="article-content">{{ question.Body }}</p>
+    <div>
+      <a class="fas fa-caret-up fa-3x" href="{% url 'upvote' question.id %}"></a>
+      <br>
+      {{ question.votes }}
+      <br>
+      <a class="fas fa-caret-down fa-3x" href="{% url 'downvote' question.id %}"></a>
+      <br>
+      <a class="btn btn-secondary btn-sm" href="{% url 'removevote' question.id %}">Remove Vote</a>
+    </div>
+  </div>
+</article>
+<b>Answers</b>
+{% for answer in question.answer_set.all %}
+{%if answer.Question_Answered == question%}
+<article class="media content-section">
+  <img class="rounded-circle article-img" src="{{ answer.Answered_By.profile.image.url }}">
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="#">{{ answer.Answered_By }}</a>
+      <small class="text-muted">{{ answer.date_posted|date:"F d, Y" }}</small>
+    </div>
+    <p class="article-content">{{ answer.Body }}</p>
+    <div>
+      <a class="fas fa-caret-up fa-3x" href="{% url 'answerupvote' answer.id %}"></a>
+      <br>
+      {{ answer.votes }}
+      <br>
+      <a class="fas fa-caret-down fa-3x" href="{% url 'answerdownvote' answer.id %}"></a>
+      <br>
+      <a class="btn btn-secondary btn-sm" href="{% url 'removeanswervote' answer.id %}">Remove Vote</a>
+    </div>
+  </div>
+</article>
+{% endif %}
+{% endfor %}
+<br>
+<a class="btn btn-primary" href="{% url 'new_answer' question.id %}" role="button">Your Answer</a>
+{% endblock content %}
